@@ -2,8 +2,9 @@ from flask import Flask, render_template,jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from datetime import datetime,timedelta
-
+import json
 app = Flask(__name__)
+application = app
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/blacklight'  # Use SQLite for simplicity
 db = SQLAlchemy(app)
 
@@ -24,7 +25,7 @@ with app.app_context():
 @app.route('/')
 def home():
    
-    return 'HEllO Apps'
+    return 'Hello Welcome To Blacklight Assignment by Pradeep Saini'
 def get_current_week_leaderboard():
     end_date = datetime.utcnow() - timedelta(days=(datetime.utcnow().weekday() + 1) % 7)
     end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=999999)
@@ -75,7 +76,9 @@ def last_week_leaderboard(country_code):
     print(country_code)
     leaderboard = get_last_week_leaderboard_by_country(country_code)
     result = [{'uid': user.uid, 'name': user.name, 'score': user.score, 'country': user.country} for user in leaderboard]
-    return jsonify(result)
+    response = jsonify(result)
+    formatted_response = json.dumps(response.json, indent=2)
+    return formatted_response
 
 # API Endpoint 3: Fetch user rank, given the userId
 @app.route('/user_rank/<string:user_id>', methods=['GET'])
