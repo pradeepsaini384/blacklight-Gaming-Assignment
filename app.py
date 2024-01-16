@@ -35,7 +35,8 @@ def get_current_week_leaderboard():
       # Start of the current week
     leaderboard = User.query.filter(User.timestamp.between(start_date, end_date)) \
                            .order_by(User.score.desc()).limit(200).all()
-    return leaderboard
+    result = [{'uid': user.uid, 'name': user.name, 'score': user.score, 'country': user.country} for user in leaderboard]
+    return result
 
 def get_last_week_leaderboard_by_country(country_code):
     end_date = datetime.utcnow() - timedelta(days=(datetime.utcnow().weekday() + 1) % 7)
@@ -47,7 +48,8 @@ def get_last_week_leaderboard_by_country(country_code):
                                     User.country == country_code) \
                            .order_by(desc(User.score)).limit(200).all()
 
-    return leaderboard
+    result = [{'uid': user.uid, 'name': user.name, 'score': user.score, 'country': user.country} for user in leaderboard]
+    return result
 
 def get_user_rank(user_id):
     user = User.query.filter_by(uid=user_id).first()
@@ -67,18 +69,15 @@ def get_user_rank(user_id):
 @app.route('/current_week_leaderboard', methods=['GET'])
 def current_week_leaderboard():
     leaderboard = get_current_week_leaderboard()
-    result = [{'uid': user.uid, 'name': user.name, 'score': user.score, 'country': user.country} for user in leaderboard]
-    return jsonify(result)
+    return render_template("currentweek.html",leaderboard=leaderboard)
 
 # API Endpoint 2: Display last week leaderboard given a country by the user (Top 200)
 @app.route('/last_week_leaderboard/<string:country_code>', methods=['GET'])
 def last_week_leaderboard(country_code):
     print(country_code)
     leaderboard = get_last_week_leaderboard_by_country(country_code)
-    result = [{'uid': user.uid, 'name': user.name, 'score': user.score, 'country': user.country} for user in leaderboard]
-    response = jsonify(result)
-    formatted_response = json.dumps(response.json, indent=2)
-    return formatted_response
+    return render_template("lastweek.html",leaderboard=leaderboard)
+    
 
 # API Endpoint 3: Fetch user rank, given the userId
 @app.route('/user_rank/<string:user_id>', methods=['GET'])
