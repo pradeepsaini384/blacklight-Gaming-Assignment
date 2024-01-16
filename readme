@@ -23,4 +23,9 @@ https://pradeepsaini.info/blacklight/user_rank/8
 
 
 
+also to run this you have to install python and these dependencies using these command 
+pip install flask 
+pip install mysqlclient 
+pip install mysqldb 
 
+and then run using python app.py
