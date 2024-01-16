@@ -13,6 +13,9 @@ its return top 200 rows according to the score
 2. Last Week leaderboard with country code :
 https://pradeepsaini.info/blacklight/last_week_leaderboard/us
 
+due to less data i have used in only five country data IN,US,AU,UK,NZ
+so try with these country code 
+
 its return top 200 rows of last Week leaderboard according to country code
 
 3. return the rank of user using user id:
